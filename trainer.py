@@ -9,9 +9,20 @@ STACK_DEPTHS = [25]
 RANKS = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
 SUITS = ["s", "o"]
 
+# Accepted inputs per action — exact match only to prevent partial string false positives
+VALID_INPUTS: dict[str, set[str]] = {
+    "fold":  {"fold"},
+    "call":  {"call"},
+    "raise": {"raise"},
+    "shove": {"shove", "jam", "all-in", "allin"},
+    "3bet":  {"3bet", "3-bet"},
+}
+
 
 def generate_hand() -> str:
-    r1, r2 = random.sample(RANKS, 2)
+    """Generate a random hand string e.g. 'AKs', 'QQ', 'T7o'. Pairs are possible."""
+    # random.choices allows replacement so both ranks can be the same (pocket pairs)
+    r1, r2 = random.choices(RANKS, k=2)
     if RANKS.index(r1) > RANKS.index(r2):
         r1, r2 = r2, r1
     if r1 == r2:
@@ -25,7 +36,7 @@ def generate_scenario() -> tuple[Scenario, str]:
     Returns the Scenario and a question string for the user.
     """
     stack_depth = random.choice(STACK_DEPTHS)
-    situation = random.choice(list([Situation.RFI, Situation.VS_SHOVE, Situation.BB_DEFEND]))
+    situation = random.choice([Situation.RFI, Situation.VS_SHOVE, Situation.BB_DEFEND])
     hand = generate_hand()
 
     if situation == Situation.RFI:
@@ -70,7 +81,8 @@ def evaluate_answer(scenario: Scenario, user_answer: str) -> tuple[bool, str]:
     user_action = user_answer.strip().lower()
     dominant = strategy.dominant_action()
 
-    is_correct = user_action == dominant or user_action in dominant or dominant in user_action
+    accepted = VALID_INPUTS.get(dominant, {dominant})
+    is_correct = user_action in accepted
     gto_display = format_strategy(strategy)
 
     if strategy.is_pure():
