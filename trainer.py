@@ -5,6 +5,8 @@ from engine.actions import MixedStrategy
 
 POSITIONS = ["UTG", "UTG+1", "UTG+2", "HJ", "CO", "BTN", "SB", "BB"]
 RFI_POSITIONS = [p for p in POSITIONS if p != "BB"]  # BB has no RFI
+# VS_SHOVE: only positions with range files at 25bb — UTG+1/UTG+2 not yet seeded
+VS_SHOVE_POSITIONS = ["UTG", "HJ", "CO", "BTN", "SB", "BB"]
 STACK_DEPTHS = [25]
 
 RANKS = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
@@ -49,7 +51,7 @@ def generate_scenario() -> tuple[Scenario, str]:
         scenario = Scenario(hand=hand, position=position, stack_depth=stack_depth, situation=situation)
 
     elif situation == Situation.VS_SHOVE:
-        position = random.choice(POSITIONS)
+        position = random.choice(VS_SHOVE_POSITIONS)
         question = (
             f"Hand: {hand} | Position: {position} | Stack: {stack_depth}bb | Situation: vs Shove\n"
             f"Villain shoves all-in — CALL or FOLD?"

@@ -98,3 +98,25 @@ When introducing a new pattern or concept I haven't used before, briefly explain
 1. What it is
 2. Why we're using it here
 3. What the alternative would have been
+
+---
+
+## Known issues
+
+Issues identified but not yet fixed. Check here at the start of each session.
+
+### Medium — BB_DEFEND ignores villain position
+**Location:** `engine/range_loader.py` + `data/ranges/25bb/bb_bb_defend.json`
+**Severity:** Data accuracy — no crash, but wrong answers
+The trainer shows "Villain (BTN) opens" but the engine loads a single flat `bb_bb_defend.json`
+regardless of who opened. In real GTO, BB defends differently vs UTG (tight range) vs BTN
+(wide range). Fix requires either separate files per villain position (`bb_vs_utg_defend.json`
+etc.) or a keyed structure inside one file. Needs new range data before it's worth implementing.
+
+### Minor — `_load()` doesn't cache missing files
+**Location:** `engine/range_loader.py:24–26`
+**Severity:** Performance only — no correctness impact
+When a range file doesn't exist, `_load()` returns `None` without writing to `_cache`.
+Every subsequent call for that spot re-hits the filesystem with `path.exists()`.
+Fix: store a sentinel (e.g. `_cache[cache_key] = None`) before returning, and check
+`cache_key not in _cache` vs `_cache[cache_key] is None` separately.
