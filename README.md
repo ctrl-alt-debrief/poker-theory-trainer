@@ -71,7 +71,7 @@ Range data lives in `data/ranges/{stack}bb/` as plain JSON files. Adding a new s
 Core engine with `decide(scenario)` entry point, mixed strategy output, JSON-based range storage, and 23 passing unit tests.
 
 ✅ **Phase 2 (partial) — Range data at 25bb**
-GTO approximations for all 6 positions across RFI, vs shove, and BB defend situations.
+Seed range data for all 6 positions across RFI, vs shove, and BB defend situations — to be replaced with solver-sourced charts.
 
 ⬜ **Phase 2 (continued) — Range depth**
 Add real solver-sourced range charts for 15bb, 20bb, 30bb, and 40bb+ stack depths.
@@ -110,6 +110,6 @@ FastAPI backend wrapping the existing engine, HTML/JS frontend, SQLite for local
 
 ## Notes
 
-- Current ranges are GTO approximations — real solver data will be imported in Phase 2
+- Ranges are seeded with manually authored data; solver-sourced charts will be imported in Phase 2 to replace them
 - All ranges assume 6-max format
 - 25bb is a common tournament stack depth where open-raise and push/fold strategies overlap

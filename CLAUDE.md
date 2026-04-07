@@ -31,7 +31,7 @@ When suggesting changes, keep these signals in mind. Don't over-engineer. Don't 
 |-------|-----------|
 | Language | Python 3.x |
 | Testing | pytest |
-| Range data | JSON files under `data/ranges/{stack}bb/` |
+| Range data | JSON files under `data/ranges/{stack}bb/` — seeded manually, to be replaced with solver-sourced charts |
 | Future backend | FastAPI |
 | Future frontend | HTML/JS — no framework yet, keep it simple |
 | Future DB | SQLite locally → Postgres when leaderboards are needed |
