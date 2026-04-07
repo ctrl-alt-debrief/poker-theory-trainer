@@ -13,25 +13,34 @@ def _file_path(position: str, situation: str, stack_depth: int) -> Path:
     return DATA_DIR / f"{stack_depth}bb" / filename
 
 
-def _load(position: str, situation: str, stack_depth: int) -> dict:
+def _load(position: str, situation: str, stack_depth: int) -> dict | None:
+    """
+    Return the strategy dict for this spot, or None if no range file exists yet.
+    None signals 'situation not implemented' — callers decide how to handle it.
+    """
     cache_key = f"{position}_{situation}_{stack_depth}"
     if cache_key not in _cache:
         path = _file_path(position, situation, stack_depth)
         if not path.exists():
-            raise FileNotFoundError(
-                f"No range file found for {position} / {situation} / {stack_depth}bb.\n"
-                f"Expected: {path}"
-            )
+            return None
         _cache[cache_key] = json.loads(path.read_text())["strategy"]
     return _cache[cache_key]
 
 
-def get_strategy(position: str, situation: str, stack_depth: int, hand: str) -> MixedStrategy:
+def get_strategy(position: str, situation: str, stack_depth: int, hand: str) -> MixedStrategy | None:
     """
     Load the GTO mixed strategy for a hand in a given spot.
-    Returns fold 100% if the hand is not in the range file.
+
+    Returns:
+        MixedStrategy — if a range file exists for this spot.
+        None          — if no range file exists for this position/situation/stack combo.
+                        The caller should treat this as 'scenario not yet implemented'.
+        MixedStrategy({"fold": 1.0}) — if the file exists but the hand is not in the range
+                        (i.e. the hand is a pure fold in GTO).
     """
     strategy_map = _load(position, situation, stack_depth)
+    if strategy_map is None:
+        return None
     if hand in strategy_map:
         return MixedStrategy(strategy_map[hand])
     return MixedStrategy({"fold": 1.0})

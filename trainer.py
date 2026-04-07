@@ -3,7 +3,8 @@ from engine.decision_engine import decide
 from engine.scenario import Scenario, Situation
 from engine.actions import MixedStrategy
 
-POSITIONS = ["UTG", "HJ", "CO", "BTN", "SB", "BB"]
+POSITIONS = ["UTG", "UTG+1", "UTG+2", "HJ", "CO", "BTN", "SB", "BB"]
+RFI_POSITIONS = [p for p in POSITIONS if p != "BB"]  # BB has no RFI
 STACK_DEPTHS = [25]
 
 RANKS = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
@@ -40,7 +41,7 @@ def generate_scenario() -> tuple[Scenario, str]:
     hand = generate_hand()
 
     if situation == Situation.RFI:
-        position = random.choice(POSITIONS)
+        position = random.choice(RFI_POSITIONS)
         question = (
             f"Hand: {hand} | Position: {position} | Stack: {stack_depth}bb | Situation: RFI\n"
             f"No action before you — FOLD, RAISE, or SHOVE?"

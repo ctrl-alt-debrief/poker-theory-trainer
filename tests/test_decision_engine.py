@@ -74,7 +74,7 @@ class TestRFI:
 
     def test_unknown_position_raises(self):
         with pytest.raises(ValueError):
-            decide(self._scenario("AA", "UTG+1"))
+            decide(self._scenario("AA", "MP"))  # MP is not a valid position in this system
 
     def test_unsupported_stack_raises(self):
         with pytest.raises(NotImplementedError):
@@ -130,6 +130,42 @@ class TestBBDefend:
     def test_wrong_position_raises(self):
         with pytest.raises(ValueError):
             decide(Scenario(hand="AA", position="BTN", stack_depth=25, situation=Situation.BB_DEFEND))
+
+
+# --- 30bb RFI ---
+
+class TestRFI30bb:
+    def _scenario(self, hand, position):
+        return Scenario(hand=hand, position=position, stack_depth=30, situation=Situation.RFI)
+
+    def test_utg_plus_one_and_two_are_valid_positions(self):
+        for position in ["UTG+1", "UTG+2"]:
+            result = decide(self._scenario("AA", position))
+            assert isinstance(result, MixedStrategy)
+
+    def test_30bb_utg_wider_than_25bb_utg(self):
+        # At 30bb UTG raises 55+; at 25bb UTG shoves only premium hands
+        result_30 = decide(self._scenario("55", "UTG"))
+        assert result_30.dominant_action() == "raise"
+
+    def test_btn_very_wide_at_30bb(self):
+        # BTN at 30bb opens much wider than earlier positions
+        result = decide(self._scenario("98o", "BTN"))
+        assert result.dominant_action() == "raise"
+
+    def test_trash_still_folds_at_30bb(self):
+        result = decide(self._scenario("72o", "UTG"))
+        assert result.dominant_action() == "fold"
+        assert result.is_pure()
+
+    def test_bb_rfi_raises_value_error(self):
+        with pytest.raises(ValueError, match="BB has no RFI"):
+            decide(self._scenario("AA", "BB"))
+
+    def test_missing_situation_raises_not_implemented(self):
+        # 30bb vs_shove data does not exist yet — should raise NotImplementedError, not crash
+        with pytest.raises(NotImplementedError):
+            decide(Scenario(hand="AA", position="UTG", stack_depth=30, situation=Situation.VS_SHOVE))
 
 
 # --- Unimplemented situations ---
