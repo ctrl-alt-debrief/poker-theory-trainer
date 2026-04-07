@@ -112,6 +112,8 @@ The trainer shows "Villain (BTN) opens" but the engine loads a single flat `bb_b
 regardless of who opened. In real GTO, BB defends differently vs UTG (tight range) vs BTN
 (wide range). Fix requires either separate files per villain position (`bb_vs_utg_defend.json`
 etc.) or a keyed structure inside one file. Needs new range data before it's worth implementing.
+**Resolved when:** `tests/test_decision_engine.py::TestBBDefend` includes villain-position-aware
+assertions (e.g. BB defends wider vs BTN than vs UTG). Remove this entry in the same commit.
 
 ### Minor — `_load()` doesn't cache missing files
 **Location:** `engine/range_loader.py:24–26`
@@ -120,3 +122,5 @@ When a range file doesn't exist, `_load()` returns `None` without writing to `_c
 Every subsequent call for that spot re-hits the filesystem with `path.exists()`.
 Fix: store a sentinel (e.g. `_cache[cache_key] = None`) before returning, and check
 `cache_key not in _cache` vs `_cache[cache_key] is None` separately.
+**Resolved when:** `tests/test_range_loader.py` includes a test asserting repeated calls for a
+missing file only hit the filesystem once. Remove this entry in the same commit.
