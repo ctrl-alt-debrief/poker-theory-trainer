@@ -1,0 +1,75 @@
+{
+  "position": "UTG",
+  "stack_depth": 25,
+  "situation": "RFI",
+  "strategy": {
+    "AA": {
+      "shove": 1.0
+    },
+    "KK": {
+      "shove": 1.0
+    },
+    "QQ": {
+      "shove": 1.0
+    },
+    "JJ": {
+      "shove": 0.8,
+      "raise": 0.2
+    },
+    "TT": {
+      "shove": 0.6,
+      "raise": 0.4
+    },
+    "99": {
+      "raise": 0.7,
+      "fold": 0.3
+    },
+    "88": {
+      "raise": 0.5,
+      "fold": 0.5
+    },
+    "77": {
+      "raise": 0.2,
+      "fold": 0.8
+    },
+    "AKs": {
+      "shove": 1.0
+    },
+    "AKo": {
+      "shove": 0.9,
+      "raise": 0.1
+    },
+    "AQs": {
+      "shove": 0.7,
+      "raise": 0.3
+    },
+    "AQo": {
+      "raise": 0.6,
+      "fold": 0.4
+    },
+    "AJs": {
+      "raise": 0.8,
+      "fold": 0.2
+    },
+    "ATs": {
+      "raise": 0.6,
+      "fold": 0.4
+    },
+    "A9s": {
+      "raise": 0.2,
+      "fold": 0.8
+    },
+    "KQs": {
+      "raise": 0.7,
+      "fold": 0.3
+    },
+    "KJs": {
+      "raise": 0.4,
+      "fold": 0.6
+    },
+    "QJs": {
+      "raise": 0.3,
+      "fold": 0.7
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "position": "BB",
+  "stack_depth": 25,
+  "situation": "vs_shove",
+  "strategy": {
+    "AA": {
+      "call": 1.0
+    },
+    "KK": {
+      "call": 1.0
+    },
+    "QQ": {
+      "call": 1.0
+    },
+    "JJ": {
+      "call": 0.95,
+      "fold": 0.05
+    },
+    "TT": {
+      "call": 0.8,
+      "fold": 0.2
+    },
+    "99": {
+      "call": 0.6,
+      "fold": 0.4
+    },
+    "88": {
+      "call": 0.35,
+      "fold": 0.65
+    },
+    "AKs": {
+      "call": 1.0
+    },
+    "AKo": {
+      "call": 1.0
+    },
+    "AQs": {
+      "call": 0.8,
+      "fold": 0.2
+    },
+    "AQo": {
+      "call": 0.55,
+      "fold": 0.45
+    },
+    "AJs": {
+      "call": 0.4,
+      "fold": 0.6
+    }
+  }
+}

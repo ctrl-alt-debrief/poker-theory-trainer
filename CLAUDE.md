@@ -1,0 +1,100 @@
+# Context for Claude Code — Poker GTO Trainer
+_Last updated: April 2026_
+
+---
+
+## Who I am
+
+Undergraduate student building this project for my software engineering portfolio.
+- **Primary goal:** demonstrate real engineering thinking to recruiters and hiring managers
+- **Secondary goal:** actually learn GTO poker theory along the way
+
+I am still learning. Prefer explanations alongside code changes, not just the change itself. When you make a non-obvious decision, tell me why.
+
+---
+
+## What this project needs to signal to recruiters
+
+- Clean architecture and separation of concerns
+- Test-driven thinking (tests exist alongside features, not after)
+- Thoughtful data modeling (`Scenario` dataclass, `MixedStrategy`, `Situation` enum)
+- Extensibility by design (adding a stack depth = drop JSON files, no code changes)
+- A clear growth arc: CLI → API → web UI (shows I think in systems)
+
+When suggesting changes, keep these signals in mind. Don't over-engineer. Don't under-document.
+
+---
+
+## Tech stack
+
+| Layer | Technology |
+|-------|-----------|
+| Language | Python 3.x |
+| Testing | pytest |
+| Range data | JSON files under `data/ranges/{stack}bb/` |
+| Future backend | FastAPI |
+| Future frontend | HTML/JS — no framework yet, keep it simple |
+| Future DB | SQLite locally → Postgres when leaderboards are needed |
+
+Do not introduce new dependencies without flagging them and explaining the tradeoff.
+
+---
+
+## Code style preferences
+
+- Type hints on all function signatures
+- Docstrings on all public functions and classes — short, plain English
+- Descriptive variable names over clever ones
+- No magic numbers — use named constants or enums
+- Prefer explicit over implicit
+- Keep functions small and single-purpose
+
+---
+
+## Project conventions
+
+- Entry point is `trainer.py`
+- All engine logic lives in `engine/`
+- Range data lives in `data/ranges/{stack}bb/`
+- Tests mirror the module structure under `tests/`
+- One JSON file per position/situation combo — filename = `{position}_{situation}.json`
+
+Do not reorganize the folder structure without discussing it first.
+
+---
+
+## Testing expectations
+
+- Every new feature or bug fix should come with a test
+- Tests should be readable — test names should explain what they're checking
+- Prefer testing behavior over implementation
+- Current suite: 23 tests in `tests/test_decision_engine.py`
+- Target: keep coverage above 80% as the project grows
+
+---
+
+## Documentation expectations
+
+- README is for recruiters first, developers second — keep it plain English
+- Inline comments explain *why*, not *what*
+- No local absolute paths anywhere in the codebase or docs
+- Commit messages follow the pattern: subject line + bullet points covering what changed, why it matters, and any new tests
+
+---
+
+## Things to flag before doing
+
+- Adding a new dependency (`pip install` anything)
+- Changing the public interface of `decide(scenario)`
+- Changing the JSON range file format
+- Restructuring folders
+- Anything that would break existing tests
+
+---
+
+## Learning goals
+
+When introducing a new pattern or concept I haven't used before, briefly explain:
+1. What it is
+2. Why we're using it here
+3. What the alternative would have been

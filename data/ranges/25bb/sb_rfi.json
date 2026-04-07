@@ -1,0 +1,171 @@
+{
+  "position": "SB",
+  "stack_depth": 25,
+  "situation": "RFI",
+  "strategy": {
+    "AA": {
+      "shove": 1.0
+    },
+    "KK": {
+      "shove": 1.0
+    },
+    "QQ": {
+      "shove": 1.0
+    },
+    "JJ": {
+      "shove": 0.85,
+      "raise": 0.15
+    },
+    "TT": {
+      "shove": 0.7,
+      "raise": 0.3
+    },
+    "99": {
+      "raise": 0.9,
+      "fold": 0.1
+    },
+    "88": {
+      "raise": 0.8,
+      "fold": 0.2
+    },
+    "77": {
+      "raise": 0.65,
+      "fold": 0.35
+    },
+    "66": {
+      "raise": 0.5,
+      "fold": 0.5
+    },
+    "55": {
+      "raise": 0.4,
+      "fold": 0.6
+    },
+    "AKs": {
+      "shove": 1.0
+    },
+    "AKo": {
+      "shove": 0.9,
+      "raise": 0.1
+    },
+    "AQs": {
+      "shove": 0.75,
+      "raise": 0.25
+    },
+    "AQo": {
+      "raise": 0.75,
+      "fold": 0.25
+    },
+    "AJs": {
+      "raise": 0.95,
+      "fold": 0.05
+    },
+    "AJo": {
+      "raise": 0.6,
+      "fold": 0.4
+    },
+    "ATs": {
+      "raise": 0.85,
+      "fold": 0.15
+    },
+    "ATo": {
+      "raise": 0.45,
+      "fold": 0.55
+    },
+    "A9s": {
+      "raise": 0.7,
+      "fold": 0.3
+    },
+    "A8s": {
+      "raise": 0.6,
+      "fold": 0.4
+    },
+    "A7s": {
+      "raise": 0.5,
+      "fold": 0.5
+    },
+    "A6s": {
+      "raise": 0.4,
+      "fold": 0.6
+    },
+    "A5s": {
+      "raise": 0.75,
+      "fold": 0.25
+    },
+    "A4s": {
+      "raise": 0.6,
+      "fold": 0.4
+    },
+    "A3s": {
+      "raise": 0.45,
+      "fold": 0.55
+    },
+    "A2s": {
+      "raise": 0.35,
+      "fold": 0.65
+    },
+    "KQs": {
+      "raise": 0.9,
+      "fold": 0.1
+    },
+    "KQo": {
+      "raise": 0.65,
+      "fold": 0.35
+    },
+    "KJs": {
+      "raise": 0.8,
+      "fold": 0.2
+    },
+    "KJo": {
+      "raise": 0.4,
+      "fold": 0.6
+    },
+    "KTs": {
+      "raise": 0.7,
+      "fold": 0.3
+    },
+    "K9s": {
+      "raise": 0.4,
+      "fold": 0.6
+    },
+    "QJs": {
+      "raise": 0.75,
+      "fold": 0.25
+    },
+    "QTs": {
+      "raise": 0.6,
+      "fold": 0.4
+    },
+    "Q9s": {
+      "raise": 0.35,
+      "fold": 0.65
+    },
+    "JTs": {
+      "raise": 0.7,
+      "fold": 0.3
+    },
+    "J9s": {
+      "raise": 0.4,
+      "fold": 0.6
+    },
+    "T9s": {
+      "raise": 0.6,
+      "fold": 0.4
+    },
+    "T8s": {
+      "raise": 0.35,
+      "fold": 0.65
+    },
+    "98s": {
+      "raise": 0.5,
+      "fold": 0.5
+    },
+    "87s": {
+      "raise": 0.4,
+      "fold": 0.6
+    },
+    "76s": {
+      "raise": 0.35,
+      "fold": 0.65
+    }
+  }
+}
