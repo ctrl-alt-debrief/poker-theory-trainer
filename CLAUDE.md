@@ -115,6 +115,16 @@ etc.) or a keyed structure inside one file. Needs new range data before it's wor
 **Resolved when:** `tests/test_decision_engine.py::TestBBDefend` includes villain-position-aware
 assertions (e.g. BB defends wider vs BTN than vs UTG). Remove this entry in the same commit.
 
+### Medium — Trainer only generates 25bb scenarios
+**Location:** `trainer.py:10` — `STACK_DEPTHS = [25]`
+**Severity:** Silent data gap — no crash, but 30bb and 80bb ranges are never exercised in play
+`generate_scenario()` draws the stack depth from `STACK_DEPTHS`, which is hardcoded to `[25]`.
+Now that 30bb and 80bb RFI data exist, players never see those spots. Fix: replace the hardcoded
+list with `available_stacks()` from `range_loader`, then filter to stacks that have data for the
+chosen situation (30bb and 80bb currently only have RFI).
+**Resolved when:** `tests/test_trainer.py::TestGenerateScenario` asserts that multiple stack depths
+are reachable from `generate_scenario()`. Remove this entry in the same commit.
+
 ### Minor — `_load()` doesn't cache missing files
 **Location:** `engine/range_loader.py:24–26`
 **Severity:** Performance only — no correctness impact

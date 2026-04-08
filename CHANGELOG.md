@@ -9,6 +9,71 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.3.0] — 2026-04-08
+
+### Added
+
+- **80bb RFI range data** (`data/ranges/80bb/`)
+  9-handed MTT ranges sourced from Pokerati.com for all 7 open-raise positions:
+  UTG, UTG+1, UTG+2, HJ, CO, BTN, SB. Wider ranges than 25bb/30bb reflect the
+  deeper-stacked nature of 80bb play (e.g. UTG opens 66+, A4s+, KJ+, Q9s+).
+
+- **`scripts/migrate_80bb_ranges.py`**
+  Converts raw source files (`80bb/*.json`, `_meta` + `RFI` structure) to the
+  project's standard range format (`strategy` key, canonical position names).
+  Source files removed after migration; script documents the derivation.
+
+- **`static/js/history.js`** — browser-side session history and weak-spot analysis
+  Lays the groundwork for per-session tracking ahead of the future web UI.
+  Stores answer records in `localStorage` under `poker_trainer_history`.
+  Key functions:
+  - `recordAnswer()` — appends one answered hand to localStorage
+  - `loadHistory()` — reads the full history array back out
+  - `weakSpots(minHands)` — groups history by spot (position + situation + stack),
+    returns accuracy stats for any spot with `minHands` or more hands played (default 3)
+  - `clearHistory()` — wipes all stored history (for a future "reset progress" UI action)
+  Designed so `_loadHistory()` / `_saveHistory()` can be swapped for `fetch()` calls
+  when a backend is added, without changing any calling code.
+
+- **`static/js/history.test.js`** — Jest-compatible tests for history.js
+  Uses a minimal localStorage mock so tests run in Node without a browser.
+
+- **`tests/test_range_loader.py`** (new file — 11 tests)
+  First direct unit tests for `engine/range_loader.py`. Previously covered only
+  indirectly through `decide()`. Tests:
+  - `available_stacks()` returns sorted integers including 25, 30, 80
+  - `get_strategy()` returns `MixedStrategy` for valid spots
+  - hands not in a range file default to pure fold (not `KeyError`)
+  - missing range files return `None` without crashing
+  - repeated calls to a missing spot return `None` both times
+  - 80bb migration is accessible through the normal engine path
+  - position lookup is case-insensitive
+
+### Known issues added
+
+- **Medium — `STACK_DEPTHS = [25]` silently ignores 30bb and 80bb data** (`trainer.py:10`)
+  The trainer hardcodes only 25bb scenarios. Now that 30bb and 80bb RFI data exist,
+  players never encounter those ranges. Tracked in `CLAUDE.md`.
+
+### Tests
+
+- Added `TestGenerateScenario` (6 tests) to `tests/test_trainer.py`:
+  - BB is never generated as position for RFI (would crash the engine)
+  - All RFI positions come from `RFI_POSITIONS`
+  - All VS_SHOVE positions come from `VS_SHOVE_POSITIONS`
+  - BB_DEFEND always sets `position="BB"` and a non-null `villain_position`
+  - Return type is always `(Scenario, str)`
+
+- Added `TestFormatStrategy` (4 tests) to `tests/test_trainer.py`:
+  - Output has no single-quotes
+  - Output contains `%` symbols
+  - Pure strategies display as 100%
+  - Mixed strategies display all actions
+
+- **Total tests: 63** (up from 23 at v0.1.0)
+
+---
+
 ## [0.2.0] — 2026-04-07
 
 ### Added

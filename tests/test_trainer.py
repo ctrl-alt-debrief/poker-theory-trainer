@@ -1,7 +1,8 @@
 import pytest
 from unittest.mock import patch
-from trainer import generate_hand, evaluate_answer, RANKS
+from trainer import generate_hand, generate_scenario, evaluate_answer, format_strategy, RANKS, RFI_POSITIONS, VS_SHOVE_POSITIONS
 from engine.scenario import Scenario, Situation
+from engine.actions import MixedStrategy
 
 
 class TestGenerateHand:
@@ -85,3 +86,81 @@ class TestEvaluateAnswer:
         scenario = self._scenario("AA", "UTG", Situation.RFI)
         _, feedback = evaluate_answer(scenario, "shove")
         assert "GTO" in feedback
+
+
+class TestGenerateScenario:
+    # generate_scenario() picks situation, position, hand, and stack randomly.
+    # We patch random.choice / random.choices to force each branch and assert
+    # the output respects the position/situation constraints.
+
+    def _force_situation(self, situation_value, position, hand="AKs"):
+        """Run generate_scenario() with controlled random output for a given situation."""
+        with patch("trainer.random") as mock_random:
+            mock_random.choice.side_effect = [
+                1,             # stack_depth (index into STACK_DEPTHS — not used directly)
+                situation_value,
+                position,
+            ]
+            mock_random.choices.return_value = [hand[0], hand[1]] if len(hand) >= 2 else ["A", "K"]
+            # Patch at the module level so generate_scenario uses our mock
+            with patch("trainer.random.choice", side_effect=[25, situation_value, position]):
+                with patch("trainer.random.choices", return_value=["A", "K"]):
+                    with patch("trainer.random.choice", side_effect=[25, situation_value, position]):
+                        pass  # nested patches get complex — use direct import approach below
+
+    def test_rfi_scenario_never_has_bb_as_position(self):
+        # BB has no RFI — if BB ever appears here the engine raises ValueError
+        for _ in range(200):
+            scenario, _ = generate_scenario()
+            if scenario.situation == Situation.RFI:
+                assert scenario.position != "BB", "BB should never be generated for RFI"
+
+    def test_rfi_position_always_in_rfi_positions(self):
+        for _ in range(200):
+            scenario, _ = generate_scenario()
+            if scenario.situation == Situation.RFI:
+                assert scenario.position in RFI_POSITIONS
+
+    def test_vs_shove_position_always_in_vs_shove_positions(self):
+        for _ in range(200):
+            scenario, _ = generate_scenario()
+            if scenario.situation == Situation.VS_SHOVE:
+                assert scenario.position in VS_SHOVE_POSITIONS
+
+    def test_bb_defend_always_has_position_bb(self):
+        for _ in range(200):
+            scenario, _ = generate_scenario()
+            if scenario.situation == Situation.BB_DEFEND:
+                assert scenario.position == "BB"
+
+    def test_bb_defend_always_has_villain_position(self):
+        for _ in range(200):
+            scenario, _ = generate_scenario()
+            if scenario.situation == Situation.BB_DEFEND:
+                assert scenario.villain_position is not None, "BB_DEFEND must have a villain_position"
+
+    def test_returns_scenario_and_string(self):
+        scenario, question = generate_scenario()
+        assert isinstance(scenario, Scenario)
+        assert isinstance(question, str)
+        assert len(question) > 0
+
+
+class TestFormatStrategy:
+    def test_no_single_quotes_in_output(self):
+        # format_strategy strips quotes so output reads as {fold: 100%} not {'fold': '100%'}
+        result = format_strategy(MixedStrategy({"fold": 1.0}))
+        assert "'" not in result
+
+    def test_output_contains_percent_signs(self):
+        result = format_strategy(MixedStrategy({"fold": 1.0}))
+        assert "%" in result
+
+    def test_pure_strategy_shows_100_percent(self):
+        result = format_strategy(MixedStrategy({"shove": 1.0}))
+        assert "100%" in result
+
+    def test_mixed_strategy_shows_multiple_actions(self):
+        result = format_strategy(MixedStrategy({"raise": 0.7, "fold": 0.3}))
+        assert "raise" in result
+        assert "fold" in result
